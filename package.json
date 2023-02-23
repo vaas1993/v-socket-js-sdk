@@ -1,0 +1,11 @@
+{
+  "name": "@vshen/v-socket-js-sdk",
+  "version": "1.0.2",
+  "description": "",
+  "main": "VSocket.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vshen",
+  "license": "ISC"
+}
