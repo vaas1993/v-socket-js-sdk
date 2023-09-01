@@ -18,10 +18,16 @@ function VSocket() {
     this._reconnectCount = 5
 
     /**
-     *
+     * 是否已连接
      * @type {boolean}
      */
-    this.connected = false;
+    this.connected = false
+
+    /**
+     * 心跳间隔，毫秒
+     * @type {number}
+     */
+    this.heartbeatInterval = 10000
 
     /**
      * 连接配置，调用 login 方法时赋值
@@ -48,6 +54,8 @@ function reconnect(data, instance) {
             )
             reconnected++
         }, 3000)
+    } else {
+        instance.connected = false
     }
 }
 
@@ -102,11 +110,31 @@ VSocket.prototype = {
                 next()
             }
             this._socket.onclose = res => {
-                this._trigger( this.connected ? this.constructor.EVENT_DISCONNECT : this.constructor.EVENT_CONNECT_FAIL, res)
+                // 如果之前连接成功，则启动重连，否则触发连接失败
+                if( this.connected ) {
+                    this._trigger(this.constructor.EVENT_DISCONNECT, res)
+                } else {
+                    this._trigger(this.constructor.EVENT_CONNECT_FAIL, res)
+                }
+                next()
             }
             this.offDisconnect(reconnect)
             this.onDisconnect(reconnect)
         })
+    },
+
+    /**
+     * 定时发送心跳包
+     */
+    heartbeat() {
+        clearInterval(this.interval)
+        this.interval = setInterval(() => {
+            if( this.connected ) {
+                this._socket.send(JSON.stringify({
+                    action: "Heartbeat"
+                }))
+            }
+        }, this.heartbeatInterval)
     },
 
     /**
