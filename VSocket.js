@@ -279,7 +279,7 @@ VSocket.prototype = {
      * 连接断开事件
      * @param {function} callback
      */
-    onDisconnect (callback) {
+    onDisconnect(callback) {
         this._on(this.constructor.EVENT_DISCONNECT, callback)
     },
 
@@ -287,7 +287,7 @@ VSocket.prototype = {
      * 移除连接断开事件监听
      * @param {function|null} callback 传入一个函数，将只移除对应的监听器，否则移除该事件的全部监听器
      */
-    offDisconnect (callback = null) {
+    offDisconnect(callback = null) {
         this._off(this.constructor.EVENT_DISCONNECT, callback)
     },
 
@@ -295,7 +295,7 @@ VSocket.prototype = {
      * 连接失败事件
      * @param {function} callback
      */
-    onConnectFail (callback) {
+    onConnectFail(callback) {
         this._on(this.constructor.EVENT_CONNECT_FAIL, callback)
     },
 
@@ -303,7 +303,7 @@ VSocket.prototype = {
      * 移除连接失败事件监听
      * @param {function|null} callback 传入一个函数，将只移除对应的监听器，否则移除该事件的全部监听器
      */
-    offConnectFail (callback = null) {
+    offConnectFail(callback = null) {
         this._off(this.constructor.EVENT_CONNECT_FAIL, callback)
     },
 }
