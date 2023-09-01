@@ -27,7 +27,7 @@ function VSocket() {
      * 心跳间隔，毫秒
      * @type {number}
      */
-    this.heartbeatInterval = 10000
+    this._heartbeatInterval = 10000
 
     /**
      * 连接配置，调用 login 方法时赋值
@@ -110,7 +110,7 @@ VSocket.prototype = {
                 next()
             }
             this._socket.onclose = res => {
-                // 如果之前连接成功，则启动重连，否则触发连接失败
+                // 如果之前连接成功，则触发断开，否则触发连接失败
                 if( this.connected ) {
                     this._trigger(this.constructor.EVENT_DISCONNECT, res)
                 } else {
@@ -124,6 +124,16 @@ VSocket.prototype = {
     },
 
     /**
+     * 主动断开连接
+     * 断开成功会触发 EVENT_DISCONNECT 事件
+     */
+    close() {
+        if( this.connected ) {
+            this._socket.close()
+        }
+    },
+
+    /**
      * 定时发送心跳包
      */
     heartbeat() {
@@ -134,7 +144,23 @@ VSocket.prototype = {
                     action: "Heartbeat"
                 }))
             }
-        }, this.heartbeatInterval)
+        }, this._heartbeatInterval)
+    },
+
+    /**
+     * 获取心跳包间隔时长，毫秒
+     * @returns {number}
+     */
+    getHeartbeatInterval() {
+        return this._heartbeatInterval
+    },
+
+    /**
+     * 设置心跳包间隔时长，毫秒
+     * @param millisecond {number}
+     */
+    setHeartbeatInterval(millisecond) {
+        this._heartbeatInterval = millisecond
     },
 
     /**
